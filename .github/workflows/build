@@ -1,0 +1,45 @@
+name: Deploy to GCloud
+
+on:
+  push:
+    branches:
+      - main # Or your desired branch for deployments
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20' # Specify your Node.js version
+
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+    - name: Set up gcloud CLI
+      uses: google-github-actions/setup-gcloud@v2
+
+    # Backend Deployment
+    - name: Deploy backend to Cloud Run
+      run: |
+        gcloud run deploy firi-secure-backend --source . --region us-central1 --service-account=firi-backend-sa@firi-5d531.iam.gserviceaccount.com --allow-unauthenticated
+      working-directory: ./backend # Crucial: This ensures the --source . is relative to ./backend
+
+    # Frontend Setup (assuming it's a static site that needs building and then deployment)
+    - name: Install frontend dependencies and build
+      run: |
+        npm install
+        npm run build # Replace 'build' with your actual build script if different
+      # No working-directory here means it runs in the repository root (where frontend is)
+
+    # Example: Deploying frontend (e.g., to Cloud Storage for static hosting)
+    # This step assumes your 'npm run build' creates a 'build' or 'dist' directory
+    # - name: Deploy frontend to Cloud Storage
+    #   run: gsutil rsync -r build gs://your-frontend-bucket # Adjust 'build' to your build output directory and 'your-frontend-bucket'
