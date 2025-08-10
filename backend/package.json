@@ -1,0 +1,20 @@
+{
+  "name": "firi-secure-backend",
+  "version": "1.0.0",
+  "description": "Secure backend proxy for the FIRI Science Fair application.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@google-cloud/secret-manager": "^5.5.0",
+    "@google/generative-ai": "^0.11.4",
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
